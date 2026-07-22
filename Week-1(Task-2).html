@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Pricing · Flexbox vs Grid</title>
+
+  <style>
+    /* ---------- RESET & BASE ---------- */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f8fafc;
+      font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+      padding: 2rem 1.5rem;
+      color: #0b1e33;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ---------- SHARED CARD STYLING ---------- */
+
+    .pricing-card {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem 1.5rem 1.8rem;
+
+      box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.04),
+        0 4px 8px rgba(0, 0, 0, 0.02);
+
+      border: 1px solid #e9edf2;
+      transition: all 0.1s ease;
+
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    /* ---------- POPULAR CARD ---------- */
+
+    .pricing-card.popular {
+      border-color: #2563eb;
+      background: #ffffff;
+
+      box-shadow:
+        0 12px 28px rgba(37, 99, 235, 0.08);
+    }
+
+    /* ---------- PLAN NAME ---------- */
+
+    .pricing-card .plan {
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #64748b;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ---------- PRICE ---------- */
+
+    .pricing-card .price {
+      font-size: 2.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0.3rem 0 0.2rem;
+      color: #0b1e33;
+    }
+
+    .pricing-card .price small {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #64748b;
+      margin-left: 4px;
+    }
+
+    /* ---------- DESCRIPTION ---------- */
+
+    .pricing-card .description {
+      color: #475569;
+      margin: 0.5rem 0 1.2rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+
+      flex: 1;
+    }
+
+    /* ---------- FEATURES ---------- */
+
+    .pricing-card .features {
+      list-style: none;
+      margin: 1rem 0 1.8rem;
+
+      font-size: 0.95rem;
+      line-height: 2.1;
+      color: #1e293b;
+
+      flex: 1;
+    }
+
+    .pricing-card .features li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pricing-card .features li::before {
+      content: "✓";
+      color: #2563eb;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    /* ---------- BUTTON ---------- */
+
+    .pricing-card .btn {
+      display: inline-block;
+
+      background: #f1f5f9;
+      color: #1e293b;
+
+      text-align: center;
+
+      padding: 0.8rem 1rem;
+
+      border-radius: 60px;
+
+      font-weight: 600;
+      font-size: 0.95rem;
+
+      text-decoration: none;
+
+      transition: 0.15s;
+
+      margin-top: 0.2rem;
+
+      border: 1px solid transparent;
+    }
+
+    /* Popular button */
+
+    .pricing-card.popular .btn {
+      background: #2563eb;
+      color: white;
+
+      box-shadow:
+        0 4px 8px rgba(37, 99, 235, 0.15);
+    }
+
+    /* Normal button hover */
+
+    .pricing-card .btn:hover {
+      background: #e2e8f0;
+    }
+
+    /* Popular button hover */
+
+    .pricing-card.popular .btn:hover {
+      background: #1d4ed8;
+
+      box-shadow:
+        0 6px 14px rgba(37, 99, 235, 0.25);
+    }
+
+    /* ---------- POPULAR BADGE ---------- */
+
+    .badge {
+      background: #2563eb;
+      color: white;
+
+      font-size: 0.75rem;
+      font-weight: 600;
+
+      padding: 0.2rem 1rem;
+
+      border-radius: 30px;
+
+      display: inline-block;
+
+      letter-spacing: 0.02em;
+
+      margin-bottom: 0.6rem;
+
+      align-self: flex-start;
+    }
+
+    /* ---------- SECTION HEADERS ---------- */
+
+    .layout-section {
+      margin: 3rem 0 1.2rem;
+
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+
+      flex-wrap: wrap;
+    }
+
+    .layout-section h2 {
+      font-weight: 600;
+      font-size: 1.6rem;
+      letter-spacing: -0.01em;
+    }
+
+    .layout-section .tag {
+      background: #e9edf2;
+
+      padding: 0.2rem 1rem;
+
+      border-radius: 40px;
+
+      font-size: 0.8rem;
+      font-weight: 500;
+
+      color: #334155;
+    }
+
+    /* ---------- DIVIDER ---------- */
+
+    hr {
+      border: none;
+
+      border-top: 2px dashed #dce2ea;
+
+      margin: 3.5rem 0 1rem;
+    }
+
+    /* =====================================================
+       FLEXBOX LAYOUT
+    ===================================================== */
+
+    .flex-pricing {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 1.8rem;
+
+      justify-content: center;
+
+      align-items: stretch;
+    }
+
+    .flex-pricing .pricing-card {
+      /*
+        flex-grow: 1
+        flex-shrink: 1
+        flex-basis: 220px
+      */
+
+      flex: 1 1 220px;
+
+      min-width: 200px;
+
+      max-width: 360px;
+    }
+
+    /* =====================================================
+       GRID LAYOUT
+    ===================================================== */
+
+    .grid-pricing {
+      display: grid;
+
+      grid-template-columns: repeat(3, 1fr);
+
+      gap: 1.8rem;
+
+      align-items: stretch;
+    }
+
+    .grid-pricing .pricing-card {
+      height: auto;
+    }
+
+    /* =====================================================
+       RESPONSIVE DESIGN
+       STACK BELOW 600px
+    ===================================================== */
+
+    @media (max-width: 600px) {
+
+      body {
+        padding: 1.5rem 1rem;
+      }
+
+      /* ---------- FLEXBOX MOBILE ---------- */
+
+      .flex-pricing {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 1.5rem;
+      }
+
+      .flex-pricing .pricing-card {
+        flex: 0 1 auto;
+
+        max-width: 100%;
+
+        min-width: unset;
+
+        width: 100%;
+      }
+
+      /* ---------- GRID MOBILE ---------- */
+
+      .grid-pricing {
+        grid-template-columns: 1fr;
+
+        gap: 1.5rem;
+      }
+
+      /* ---------- MOBILE TEXT ---------- */
+
+      .layout-section h2 {
+        font-size: 1.3rem;
+      }
+
+      .pricing-card .price {
+        font-size: 2.2rem;
+      }
+    }
+
+    /* ---------- FOOTER / FOOTNOTE ---------- */
+
+    .footnote {
+      text-align: center;
+
+      margin: 3rem 0 1rem;
+
+      color: #64748b;
+
+      font-size: 0.9rem;
+
+      border-top: 1px solid #e2e8f0;
+
+      padding-top: 2rem;
+    }
+
+    .footnote span {
+      background: #f1f5f9;
+
+      padding: 0.1rem 0.8rem;
+
+      border-radius: 30px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div style="margin-bottom: 2rem;">
+
+      <h1
+        style="
+          font-weight: 600;
+          font-size: 2.2rem;
+          letter-spacing: -0.02em;
+        "
+      >
+        Flexbox vs Grid
+      </h1>
+
+      <p
+        style="
+          color: #475569;
+          max-width: 600px;
+          margin-top: 0.2rem;
+        "
+      >
+        Same 3-column pricing section — built twice.
+        Resize under 600px to see the stack.
+      </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         FLEXBOX SECTION
+    ====================================================== -->
+
+    <div class="layout-section">
+
+      <h2>⚡ Flexbox</h2>
+
+      <span class="tag">
+        flex-wrap + flex: 1 1 220px
+      </span>
+
+    </div>
+
+
+    <div class="flex-pricing">
+
+      <!-- STARTER CARD -->
+
+      <div class="pricing-card">
+
+        <div class="plan">
+          Starter
+        </div>
+
+        <div class="price">
+          $19
+          <small>/mo</small>
+        </div>
+
+        <div class="description">
+          For teams getting started
+        </div>
+
+        <ul class="features">
+
+          <li>
+            5 projects
+          </li>
+
+          <li>
+            10 GB storage
+          </li>
+
+          <li>
+            Basic support
+          </li>
+
+        </ul>
+
+        <a href="#" class="btn">
+          Choose plan
+        </a>
+
+      </div>
+
+
+      <!-- PRO CARD -->
+
+      <div class="pricing-card popular">
+
+        <span class="badge">
+          Most popular
+        </span>
+
+        <div class="plan">
+          Pro
+        </div>
+
+        <div class="price">
+          $49
+          <small>/mo</small>
+        </div>
+
+        <div class="description">
+          For growing businesses
+        </div>
+
+        <ul class="features">
+
+          <li>
+            Unlimited projects
+          </li>
+
+          <li>
+            100 GB storage
+          </li>
+
+          <li>
+            Priority support
+          </li>
+
+          <li>
+            Advanced analytics
+          </li>
+
+        </ul>
+
+        <a href="#" class="btn">
+          Start free trial
+        </a>
+
+      </div>
+
+
+      <!-- ENTERPRISE CARD -->
+
+      <div class="pricing-card">
+
+        <div class="plan">
+          Enterprise
+        </div>
+
+        <div class="price">
+          $99
+          <small>/mo</small>
+        </div>
+
+        <div class="description">
+          For large organizations
+        </div>
+
+        <ul class="features">
+
+          <li>
+            Unlimited projects
+          </li>
+
+          <li>
+            1 TB storage
+          </li>
+
+          <li>
+            24/7 dedicated support
+          </li>
+
+          <li>
+            Custom integrations
+          </li>
+
+          <li>
+            SSO &amp; compliance
+          </li>
+
+        </ul>
+
+        <a href="#" class="btn">
+          Contact sales
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- DIVIDER -->
+
+    <hr />
+
+
+    <!-- =====================================================
+         GRID SECTION
+    ====================================================== -->
+
+    <div class="layout-section">
+
+      <h2>🧩 CSS Grid</h2>
+
+      <span class="tag">
+        grid-template-columns: repeat(3, 1fr)
+      </span>
+
+    </div>
+
+
+    <div class="grid-pricing">
+
+      <!-- STARTER CARD -->
+
+      <div class="pricing-card">
+
+        <div class="plan">
+          Starter
+        </div>
+
+        <div class="price">
+          $19
+          <small>/mo</small>
+        </div>
+
+        <div class="description">
+          For teams getting started
+        </div>
+
+        <ul class="features">
+
+          <li>
+            5 projects
+          </li>
+
+          <li>
+            10 GB storage
+          </li>
+
+          <li>
+            Basic support
+          </li>
+
+        </ul>
+
+        <a href="#" class="btn">
+          Choose plan
+        </a>
+
+      </div>
+
+
+      <!-- PRO CARD -->
+
+      <div class="pricing-card popular">
+
+        <span class="badge">
+          Most popular
+        </span>
+
+        <div class="plan">
+          Pro
+        </div>
+
+        <div class="price">
+          $49
+          <small>/mo</small>
+        </div>
+
+        <div class="description">
+          For growing businesses
+        </div>
+
+        <ul class="features">
+
+          <li>
+            Unlimited projects
+          </li>
+
+          <li>
+            100 GB storage
+          </li>
+
+          <li>
+            Priority support
+          </li>
+
+          <li>
+            Advanced analytics
+          </li>
+
+        </ul>
+
+        <a href="#" class="btn">
+          Start free trial
+        </a>
+
+      </div>
+
+
+      <!-- ENTERPRISE CARD -->
+
+      <div class="pricing-card">
+
+        <div class="plan">
+          Enterprise
+        </div>
+
+        <div class="price">
+          $99
+          <small>/mo</small>
+        </div>
+
+        <div class="description">
+          For large organizations
+        </div>
+
+        <ul class="features">
+
+          <li>
+            Unlimited projects
+          </li>
+
+          <li>
+            1 TB storage
+          </li>
+
+          <li>
+            24/7 dedicated support
+          </li>
+
+          <li>
+            Custom integrations
+          </li>
+
+          <li>
+            SSO &amp; compliance
+          </li>
+
+        </ul>
+
+        <a href="#" class="btn">
+          Contact sales
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <div class="footnote">
+
+      <span>
+        ⬇️ Resize window below 600px to see both layouts
+        stack into one column
+      </span>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
