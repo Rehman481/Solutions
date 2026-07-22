@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To-Do · DOM in sync</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="todo-app">
+    <h1>
+      ✏️ Tasks
+      <small id="remainingCount">0</small>
+    </h1>
+
+    <!-- add task -->
+    <div class="add-section">
+      <input type="text" id="taskInput" placeholder="Write a task…" autocomplete="off" />
+      <button id="addBtn">Add</button>
+    </div>
+
+    <!-- filter bar -->
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="active">Active</button>
+      <button class="filter-btn" data-filter="completed">Completed</button>
+    </div>
+
+    <!-- task list -->
+    <ul class="task-list" id="taskList">
+      <!-- tasks will be inserted here -->
+    </ul>
+
+    <!-- footer: remaining -->
+    <div class="counter-footer">
+      <span><span id="remainingCountFooter">0</span> tasks remaining</span>
+      <span style="font-size:0.8rem; opacity:0.7;">✓ click to toggle</span>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
