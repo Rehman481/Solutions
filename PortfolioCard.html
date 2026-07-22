@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rehman Asif - Profile Card</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #f0ebe6;
+      font-family: 'Inter', sans-serif;
+      padding: 1.5rem;
+      gap: 2rem;
+    }
+
+    .profile-card {
+      max-width: 500px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.25), 0 8px 24px -6px rgba(0,0,0,0.08);
+      padding: 2rem 1.8rem 1.8rem;
+    }
+
+    .profile-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.10);
+      border: 4px solid #f0ebe6;
+      margin-bottom: 0.75rem;
+    }
+
+    .profile-name {
+      font-family: 'Merriweather', serif;
+      font-weight: 700;
+      font-size: 1.9rem;
+      color: #2c241e;
+      margin-bottom: 0.2rem;
+    }
+
+    .profile-title {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #6f5e53;
+      background: #f2ede8;
+      padding: 0.25rem 1.2rem;
+      border-radius: 40px;
+    }
+
+    .profile-bio {
+      margin: 1.5rem 0 1.8rem;
+    }
+
+    .bio-text {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #3d352e;
+      text-align: center;
+      background: #faf8f6;
+      padding: 1rem 1.2rem;
+      border-radius: 1.5rem;
+      border-left: 4px solid #d8cdc2;
+    }
+
+    .profile-footer {
+      display: flex;
+      justify-content: center;
+      gap: 1.8rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid #ece4dc;
+    }
+
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 3.4rem;
+      height: 3.4rem;
+      border-radius: 50%;
+      background: #f4efe9;
+      color: #3b3129;
+      font-size: 1.6rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid #e8ddd4;
+    }
+
+    .social-link:hover {
+      background: #2c241e;
+      color: #fbf6f0;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 14px rgba(44,36,30,0.15);
+    }
+
+    .email-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #3b3129;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      background: #f4efe9;
+      border: 1px solid #e8ddd4;
+      transition: all 0.2s ease;
+    }
+
+    .email-link:hover {
+      background: #2c241e;
+      color: #fbf6f0;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 14px rgba(44,36,30,0.15);
+    }
+
+    .footer-extra {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #ece4dc;
+    }
+
+    /* Reflection styles */
+    .reflection {
+      max-width: 500px;
+      width: 100%;
+      background: #faf6f1;
+      padding: 1.2rem 1.5rem;
+      border-radius: 1.5rem;
+      border: 1px solid #e4d9d0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      color: #3f352e;
+      line-height: 1.7;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .reflection-title {
+      font-weight: 600;
+      color: #5b4a3d;
+      display: block;
+      margin-bottom: 0.3rem;
+      font-size: 0.9rem;
+    }
+
+    .reflection code {
+      background: #e8e0d9;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      color: #2c241e;
+    }
+
+    @media (max-width: 400px) {
+      .profile-card {
+        padding: 1.5rem 1rem 1.2rem;
+        border-radius: 1.6rem;
+      }
+      .profile-photo {
+        width: 100px;
+        height: 100px;
+      }
+      .profile-name {
+        font-size: 1.6rem;
+      }
+      .bio-text {
+        font-size: 0.95rem;
+        padding: 0.9rem 1rem;
+      }
+      .social-link {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.3rem;
+      }
+      .profile-footer {
+        gap: 1.2rem;
+      }
+      .email-link {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+      }
+      .reflection {
+        padding: 1rem 1.2rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (min-width: 500px) {
+      .profile-card {
+        padding: 2.4rem 2.4rem 2rem;
+      }
+      .profile-photo {
+        width: 130px;
+        height: 130px;
+      }
+      .profile-name {
+        font-size: 2.2rem;
+      }
+      .bio-text {
+        font-size: 1.05rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Profile Card -->
+  <article class="profile-card">
+    <header class="profile-header">
+      <img class="profile-photo" 
+           src="https://ui-avatars.com/api/?name=Rehman+Asif&size=130&background=e8ddd4&color=2c241e&bold=true" 
+           alt="Rehman Asif">
+      <h1 class="profile-name">Rehman Asif</h1>
+      <span class="profile-title">Frontend Developer</span>
+    </header>
+
+    <section class="profile-bio">
+      <p class="bio-text">
+        Passionate frontend developer crafting clean, responsive web experiences. 
+        Focused on semantic HTML, modern CSS, and creating user-centered designs 
+        that bring ideas to life.
+      </p>
+    </section>
+
+    <footer class="profile-footer">
+      <a href="https://github.com/Rehman481" target="_blank" class="social-link" aria-label="GitHub">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="https://www.linkedin.com/in/rehman-asif-1808052a3" target="_blank" class="social-link" aria-label="LinkedIn">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+      <a href="mailto:rehmanasif1133@gmail.com" class="social-link" aria-label="Email">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </footer>
+
+    <div class="footer-extra">
+      <a href="mailto:rehmanasif1133@gmail.com" class="email-link">
+        <i class="fas fa-envelope"></i> rehmanasif1133@gmail.com
+      </a>
+    </div>
+  </article>
+
+  <!-- CSS Reflection -->
+  <section class="reflection">
+    <span class="reflection-title">✧ CSS Reflection</span>
+    <p>
+      <code>Box-shadow</code> felt confusing at first because adjusting blur and spread values seemed unpredictable — I resolved it by testing each value individually (offset-x, offset-y, blur, spread, color) to understand their impact on depth perception. 
+      <code>Margin</code> collapsing between the header and section also caused spacing issues, which I fixed by using <code>padding</code> on the parent card container and <code>gap</code> in flex layouts instead of relying solely on margins. 
+      <code>Border-radius</code> combined with borders and backgrounds required experimentation with different values and using <code>overflow: hidden</code> where needed to achieve the smooth, polished look I wanted. 
+      I also found font pairing tricky — Merriweather for headings and Inter for body text gave the right balance of elegance and readability without sacrificing performance.
+    </p>
+  </section>
+</body>
+</html>
