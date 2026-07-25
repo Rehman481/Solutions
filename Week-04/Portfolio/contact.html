@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact · Rehman Asif Portfolio</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <!-- ===== HEADER / NAVBAR (Shared) ===== -->
+    <header class="site-header">
+        <nav class="navbar container">
+            <div class="logo">
+                <a href="index.html">🚀 Rehman Asif</a>
+            </div>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Get in Touch</h1>
+                <p>Have a question or want to work together? Send me a message!</p>
+            </div>
+        </section>
+
+        <section class="contact-section">
+            <div class="container">
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <h3>Let's Connect</h3>
+                        <p>I'm always open to new opportunities, collaborations, or just a friendly chat.</p>
+                        <div class="contact-details">
+                            <div class="contact-item">
+                                <span class="icon">📧</span>
+                                <span>rehmanasif1133@gmail.com</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="icon">📍</span>
+                                <span>Remote · Worldwide</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="icon">⏰</span>
+                                <span>Available for projects</span>
+                            </div>
+                        </div>
+                        <div class="social-links">
+                            <a href="https://github.com/Rehman481" class="social-btn">GitHub</a>
+                            <a href="https://www.linkedin.com/in/rehman-asif-6a0425418" class="social-btn">LinkedIn</a>
+                            <a href="#" class="social-btn">Twitter</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-form-wrapper">
+                        <form id="contactForm" novalidate>
+                            <div class="form-group">
+                                <label for="name">Name *</label>
+                                <input type="text" id="name" placeholder="Your name" required />
+                                <div class="error-message hidden" data-for="name">Please enter your name</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email *</label>
+                                <input type="email" id="email" placeholder="your@email.com" required />
+                                <div class="error-message hidden" data-for="email">Please enter a valid email</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Subject *</label>
+                                <input type="text" id="subject" placeholder="What's this about?" required />
+                                <div class="error-message hidden" data-for="subject">Please enter a subject</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message *</label>
+                                <textarea id="message" rows="5" placeholder="Your message..." required></textarea>
+                                <div class="error-message hidden" data-for="message">Please enter your message</div>
+                            </div>
+                            <div id="formStatus" class="form-status hidden"></div>
+                            <button type="submit" id="submitBtn">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== FOOTER (Shared) ===== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2026 Rehman Asif. Built with ❤️</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Rehman481">GitHub</a>
+                    <a href="https://www.linkedin.com/in/rehman-asif-6a0425418">LinkedIn</a>
+                    <a href="https://twitter.com">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

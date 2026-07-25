@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projects · Rehman Asif Portfolio</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <!-- ===== HEADER / NAVBAR (Shared) ===== -->
+    <header class="site-header">
+        <nav class="navbar container">
+            <div class="logo">
+                <a href="index.html">🚀 Rehman Asif</a>
+            </div>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="projects.html" class="active">Projects</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>My Projects</h1>
+                <p>Here are some of the things I've built. Each project represents a unique challenge and learning experience.</p>
+            </div>
+        </section>
+
+        <section class="projects-section">
+            <div class="container">
+                <div class="project-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="web">Web Apps</button>
+                    <button class="filter-btn" data-filter="mobile">Mobile</button>
+                    <button class="filter-btn" data-filter="design">Design</button>
+                </div>
+                <div id="projectsContainer" class="projects-grid">
+                    <!-- Projects will be rendered dynamically from JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== FOOTER (Shared) ===== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2026 Rehman Asif. Built with ❤️</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Rehman481">GitHub</a>
+                    <a href="https://www.linkedin.com/in/rehman-asif-6a0425418">LinkedIn</a>
+                    <a href="https://twitter.com">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
