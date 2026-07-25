@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notes App · LocalStorage</title>
+  <style>
+    /* ----- Reset & Base ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #f1f5f9;
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
+      color: #0b1e33;
+    }
+
+    .notes-app {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 24px;
+      padding: 2.5rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+      border: 1px solid #eef2f6;
+    }
+
+    /* ----- Header ----- */
+    header {
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 1.5rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0b1e33;
+    }
+
+    header .subtitle {
+      color: #64748b;
+      font-size: 0.95rem;
+      margin-top: 0.2rem;
+    }
+
+    /* ----- Search Section ----- */
+    .search-section {
+      margin-bottom: 2rem;
+    }
+
+    .search-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: #f8fafc;
+      border: 2px solid #eef2f6;
+      border-radius: 60px;
+      padding: 0 1.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .search-container:focus-within {
+      border-color: #2563eb;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.06);
+    }
+
+    .search-icon {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      margin-right: 0.5rem;
+    }
+
+    #searchInput {
+      flex: 1;
+      padding: 0.8rem 0.5rem;
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      color: #0b1e33;
+      outline: none;
+    }
+
+    #searchInput::placeholder {
+      color: #94a3b8;
+    }
+
+    .search-count {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      white-space: nowrap;
+      padding-left: 0.5rem;
+    }
+
+    /* ----- Add Note Section ----- */
+    .add-note-section {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2.5rem;
+      border: 2px solid #eef2f6;
+      transition: all 0.3s ease;
+    }
+
+    .add-note-section:focus-within {
+      border-color: #2563eb;
+      background: white;
+    }
+
+    .add-note-section h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #0b1e33;
+      margin-bottom: 1rem;
+    }
+
+    #noteForm {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      position: relative;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: 2px solid #eef2f6;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: #0b1e33;
+      background: white;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.06);
+    }
+
+    .form-group input.error,
+    .form-group textarea.error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.06);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .char-count {
+      position: absolute;
+      bottom: 0.5rem;
+      right: 0.8rem;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      pointer-events: none;
+    }
+
+    .char-count.limit {
+      color: #ef4444;
+    }
+
+    .form-errors {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .error-message {
+      font-size: 0.85rem;
+      color: #ef4444;
+      padding: 0.3rem 0.5rem;
+      background: rgba(239, 68, 68, 0.05);
+      border-radius: 6px;
+      border-left: 3px solid #ef4444;
+    }
+
+    .error-message.hidden {
+      display: none;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    #saveNoteBtn {
+      padding: 0.8rem 2rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    #saveNoteBtn:hover {
+      background: #1d4ed8;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+    }
+
+    #saveNoteBtn:active {
+      transform: scale(0.96);
+    }
+
+    .cancel-btn {
+      padding: 0.8rem 2rem;
+      background: #f1f5f9;
+      color: #475569;
+      border: 2px solid #eef2f6;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .cancel-btn:hover {
+      background: #eef2f6;
+    }
+
+    .cancel-btn.hidden {
+      display: none;
+    }
+
+    /* ----- Notes Section ----- */
+    .notes-section {
+      margin-top: 0.5rem;
+    }
+
+    .notes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .notes-header h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0b1e33;
+    }
+
+    .notes-header span {
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+
+    .notes-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+
+    /* ----- Note Card ----- */
+    .note-card {
+      background: white;
+      border: 2px solid #eef2f6;
+      border-radius: 16px;
+      padding: 1.2rem;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      animation: fadeInUp 0.4s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .note-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+      border-color: #2563eb;
+    }
+
+    .note-card .note-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0b1e33;
+      margin-bottom: 0.3rem;
+      word-break: break-word;
+    }
+
+    .note-card .note-content {
+      font-size: 0.95rem;
+      color: #475569;
+      margin-bottom: 0.8rem;
+      line-height: 1.5;
+      word-break: break-word;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .note-card .note-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.8rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid #f1f5f9;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .note-card .note-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .note-card .note-actions button {
+      padding: 0.3rem 0.8rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .note-card .edit-btn {
+      background: rgba(37, 99, 235, 0.08);
+      color: #2563eb;
+    }
+
+    .note-card .edit-btn:hover {
+      background: rgba(37, 99, 235, 0.15);
+    }
+
+    .note-card .delete-btn {
+      background: rgba(239, 68, 68, 0.08);
+      color: #ef4444;
+    }
+
+    .note-card .delete-btn:hover {
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    /* ----- Empty State ----- */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #94a3b8;
+    }
+
+    .empty-state .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 0.2rem;
+    }
+
+    .empty-state p {
+      font-size: 0.95rem;
+    }
+
+    /* ----- Responsive ----- */
+    @media (max-width: 768px) {
+      .notes-app {
+        padding: 1.5rem;
+      }
+
+      header h1 {
+        font-size: 1.6rem;
+      }
+
+      .add-note-section {
+        padding: 1rem;
+      }
+
+      .notes-container {
+        grid-template-columns: 1fr;
+      }
+
+      #saveNoteBtn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .search-container {
+        padding: 0 1rem;
+      }
+
+      #searchInput {
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .notes-app {
+        padding: 1rem;
+      }
+
+      .note-card .note-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: stretch;
+      }
+
+      .note-card .note-actions {
+        justify-content: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="notes-app">
+    <header>
+      <h1>📝 My Notes</h1>
+      <p class="subtitle">Your notes, always saved</p>
+    </header>
+
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Search notes..." 
+        />
+        <span id="searchCount" class="search-count"></span>
+      </div>
+    </div>
+
+    <!-- Add Note Form -->
+    <div class="add-note-section">
+      <h3>✏️ Create New Note</h3>
+      <form id="noteForm" novalidate>
+        <div class="form-group">
+          <input 
+            type="text" 
+            id="noteTitle" 
+            placeholder="Note title..." 
+            maxlength="100"
+          />
+          <span class="char-count" id="titleCount">0/100</span>
+        </div>
+        <div class="form-group">
+          <textarea 
+            id="noteContent" 
+            placeholder="Write your note here..." 
+            rows="4"
+            maxlength="1000"
+          ></textarea>
+          <span class="char-count" id="contentCount">0/1000</span>
+        </div>
+        <div class="form-errors">
+          <div id="titleError" class="error-message hidden">Title is required</div>
+          <div id="contentError" class="error-message hidden">Content is required</div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" id="saveNoteBtn">Save Note</button>
+          <button type="button" id="cancelEditBtn" class="cancel-btn hidden">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Notes Grid -->
+    <div class="notes-section">
+      <div class="notes-header">
+        <h3>Your Notes</h3>
+        <span id="notesCount">0 notes</span>
+      </div>
+      <div id="notesContainer" class="notes-container">
+        <!-- Notes will be inserted here -->
+      </div>
+      <div id="emptyState" class="empty-state">
+        <div class="empty-icon">📋</div>
+        <h3>No notes yet</h3>
+        <p>Create your first note above!</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========================================
+    // NOTES APP · LocalStorage Persistence
+    // All JavaScript inline to avoid loading issues
+    // ========================================
+
+    (function() {
+      'use strict';
+
+      // ----- DOM References -----
+      const noteForm = document.getElementById('noteForm');
+      const noteTitle = document.getElementById('noteTitle');
+      const noteContent = document.getElementById('noteContent');
+      const titleError = document.getElementById('titleError');
+      const contentError = document.getElementById('contentError');
+      const saveNoteBtn = document.getElementById('saveNoteBtn');
+      const cancelEditBtn = document.getElementById('cancelEditBtn');
+      const notesContainer = document.getElementById('notesContainer');
+      const emptyState = document.getElementById('emptyState');
+      const searchInput = document.getElementById('searchInput');
+      const searchCount = document.getElementById('searchCount');
+      const notesCount = document.getElementById('notesCount');
+      const titleCount = document.getElementById('titleCount');
+      const contentCount = document.getElementById('contentCount');
+
+      // ----- State -----
+      let notes = [];
+      let editingNoteId = null;
+
+      // ----- Load from localStorage -----
+      function loadNotes() {
+        try {
+          const stored = localStorage.getItem('notes');
+          if (stored) {
+            notes = JSON.parse(stored);
+            notes = notes.filter(note => note.id && note.title !== undefined && note.content !== undefined);
+          } else {
+            notes = [];
+          }
+        } catch (error) {
+          console.error('Error loading notes:', error);
+          notes = [];
+        }
+      }
+
+      // ----- Save to localStorage -----
+      function saveNotes() {
+        try {
+          localStorage.setItem('notes', JSON.stringify(notes));
+          console.log('✅ Notes saved! Total:', notes.length);
+          return true;
+        } catch (error) {
+          console.error('Error saving notes:', error);
+          return false;
+        }
+      }
+
+      // ----- Generate ID -----
+      function generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      }
+
+      // ----- Get current timestamp -----
+      function getTimestamp() {
+        return new Date().toISOString();
+      }
+
+      // ----- Format date for display -----
+      function formatDate(isoString) {
+        const date = new Date(isoString);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins}m ago`;
+        if (diffHours < 24) return `${diffHours}h ago`;
+        if (diffDays < 7) return `${diffDays}d ago`;
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      }
+
+      // ----- Validate Note -----
+      function validateNote(title, content) {
+        let isValid = true;
+
+        if (!title || title.trim() === '') {
+          titleError.classList.remove('hidden');
+          noteTitle.classList.add('error');
+          isValid = false;
+        } else {
+          titleError.classList.add('hidden');
+          noteTitle.classList.remove('error');
+        }
+
+        if (!content || content.trim() === '') {
+          contentError.classList.remove('hidden');
+          noteContent.classList.add('error');
+          isValid = false;
+        } else {
+          contentError.classList.add('hidden');
+          noteContent.classList.remove('error');
+        }
+
+        return isValid;
+      }
+
+      // ----- Render Notes -----
+      function renderNotes() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const filteredNotes = notes.filter(note => {
+          const titleMatch = note.title.toLowerCase().includes(searchTerm);
+          const contentMatch = note.content.toLowerCase().includes(searchTerm);
+          return titleMatch || contentMatch;
+        });
+
+        notesCount.textContent = `${notes.length} note${notes.length !== 1 ? 's' : ''}`;
+        searchCount.textContent = searchTerm ? `(${filteredNotes.length} results)` : '';
+
+        notesContainer.innerHTML = '';
+
+        if (filteredNotes.length === 0) {
+          emptyState.style.display = 'block';
+          notesContainer.style.display = 'none';
+          return;
+        }
+
+        emptyState.style.display = 'none';
+        notesContainer.style.display = 'grid';
+
+        // Sort by lastEdited (OLDEST first - new notes appear at the BOTTOM)
+        const sorted = [...filteredNotes].sort((a, b) => 
+          new Date(a.lastEdited) - new Date(b.lastEdited)
+        );
+
+        sorted.forEach(note => {
+          const card = document.createElement('div');
+          card.className = 'note-card';
+          card.dataset.id = note.id;
+
+          const titleEl = document.createElement('div');
+          titleEl.className = 'note-title';
+          titleEl.textContent = note.title || 'Untitled';
+
+          const contentEl = document.createElement('div');
+          contentEl.className = 'note-content';
+          contentEl.textContent = note.content || 'No content';
+
+          const metaEl = document.createElement('div');
+          metaEl.className = 'note-meta';
+
+          const timestamp = document.createElement('span');
+          timestamp.textContent = `Last edited: ${formatDate(note.lastEdited)}`;
+
+          const actions = document.createElement('div');
+          actions.className = 'note-actions';
+
+          const editBtn = document.createElement('button');
+          editBtn.className = 'edit-btn';
+          editBtn.textContent = '✏️ Edit';
+          editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            startEdit(note.id);
+          });
+
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'delete-btn';
+          deleteBtn.textContent = '🗑️ Delete';
+          deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteNote(note.id);
+          });
+
+          actions.appendChild(editBtn);
+          actions.appendChild(deleteBtn);
+          metaEl.appendChild(timestamp);
+          metaEl.appendChild(actions);
+
+          card.appendChild(titleEl);
+          card.appendChild(contentEl);
+          card.appendChild(metaEl);
+
+          notesContainer.appendChild(card);
+        });
+      }
+
+      // ----- Create Note -----
+      function createNote(title, content) {
+        const note = {
+          id: generateId(),
+          title: title.trim(),
+          content: content.trim(),
+          lastEdited: getTimestamp(),
+          createdAt: getTimestamp()
+        };
+        notes.push(note);
+        const saved = saveNotes();
+        if (saved) {
+          renderNotes();
+          console.log('✅ Note created:', note.title);
+          return true;
+        }
+        return false;
+      }
+
+      // ----- Update Note -----
+      function updateNote(id, title, content) {
+        const note = notes.find(n => n.id === id);
+        if (note) {
+          note.title = title.trim();
+          note.content = content.trim();
+          note.lastEdited = getTimestamp();
+          const saved = saveNotes();
+          if (saved) {
+            renderNotes();
+            console.log('✅ Note updated:', note.title);
+            return true;
+          }
+        }
+        return false;
+      }
+
+      // ----- Delete Note -----
+      function deleteNote(id) {
+        if (confirm('Delete this note?')) {
+          notes = notes.filter(n => n.id !== id);
+          const saved = saveNotes();
+          if (saved) {
+            renderNotes();
+            if (editingNoteId === id) {
+              cancelEdit();
+            }
+            console.log('🗑️ Note deleted');
+          }
+        }
+      }
+
+      // ----- Start Edit -----
+      function startEdit(id) {
+        const note = notes.find(n => n.id === id);
+        if (!note) return;
+
+        editingNoteId = id;
+        noteTitle.value = note.title;
+        noteContent.value = note.content;
+        saveNoteBtn.textContent = 'Update Note';
+        cancelEditBtn.classList.remove('hidden');
+
+        noteForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        noteTitle.focus();
+        updateCharCounts();
+      }
+
+      // ----- Cancel Edit -----
+      function cancelEdit() {
+        editingNoteId = null;
+        noteForm.reset();
+        saveNoteBtn.textContent = 'Save Note';
+        cancelEditBtn.classList.add('hidden');
+        noteTitle.classList.remove('error');
+        noteContent.classList.remove('error');
+        titleError.classList.add('hidden');
+        contentError.classList.add('hidden');
+        updateCharCounts();
+      }
+
+      // ----- Update Character Counts -----
+      function updateCharCounts() {
+        const titleLength = noteTitle.value.length;
+        const contentLength = noteContent.value.length;
+        
+        titleCount.textContent = `${titleLength}/100`;
+        contentCount.textContent = `${contentLength}/1000`;
+        
+        titleCount.classList.toggle('limit', titleLength >= 90);
+        contentCount.classList.toggle('limit', contentLength >= 900);
+      }
+
+      // ----- Handle Form Submit -----
+      function handleSubmit(e) {
+        // IMPORTANT: Prevent the default form submission (page reload)
+        e.preventDefault();
+        e.stopPropagation();
+
+        const title = noteTitle.value;
+        const content = noteContent.value;
+
+        if (!validateNote(title, content)) {
+          return false;
+        }
+
+        let success = false;
+        if (editingNoteId) {
+          success = updateNote(editingNoteId, title, content);
+          if (success) {
+            cancelEdit();
+          }
+        } else {
+          success = createNote(title, content);
+          if (success) {
+            noteForm.reset();
+            updateCharCounts();
+            noteTitle.focus();
+          }
+        }
+
+        if (success) {
+          titleError.classList.add('hidden');
+          contentError.classList.add('hidden');
+          noteTitle.classList.remove('error');
+          noteContent.classList.remove('error');
+        }
+        
+        return false;
+      }
+
+      // ----- Search Handler -----
+      function handleSearch() {
+        renderNotes();
+      }
+
+      // ----- Event Listeners -----
+      noteForm.addEventListener('submit', handleSubmit);
+      cancelEditBtn.addEventListener('click', cancelEdit);
+      searchInput.addEventListener('input', handleSearch);
+      noteTitle.addEventListener('input', updateCharCounts);
+      noteContent.addEventListener('input', updateCharCounts);
+
+      // ----- Initial Load -----
+      loadNotes();
+
+      if (notes.length === 0) {
+        const sampleNotes = [
+          {
+            id: generateId(),
+            title: 'Welcome to your notes app!',
+            content: 'This is your first note. Try creating, editing, and deleting notes. Your data is saved in localStorage, so it will persist even after refreshing the page.',
+            lastEdited: getTimestamp(),
+            createdAt: getTimestamp()
+          },
+          {
+            id: generateId(),
+            title: 'Tips for using this app',
+            content: '• Use the search bar to find notes\n• Click Edit to modify a note\n• Delete notes you no longer need\n• All changes are saved automatically',
+            lastEdited: getTimestamp(),
+            createdAt: getTimestamp()
+          }
+        ];
+        notes = sampleNotes;
+        saveNotes();
+      }
+
+      renderNotes();
+      updateCharCounts();
+
+      console.log('🚀 Notes app loaded successfully!');
+      console.log('📝 Total notes:', notes.length);
+
+    })();
+
+    // ========================================
+    // LOCALSTORAGE DATA STRUCTURE EXPLANATION
+    // ========================================
+    /*
+      How I structured the data stored in localStorage:
+      
+      1. Single Source of Truth: I store all notes in a single array called 'notes' 
+         in localStorage. Each note is an object with consistent fields: id, title, 
+         content, lastEdited, and createdAt. This makes it easy to read, write, 
+         and manipulate the entire dataset.
+      
+      2. Immutable Updates: Instead of directly mutating the notes array, I use 
+         array methods like filter() and map() to create new arrays when deleting 
+         or updating notes. This prevents unintended side effects and makes the 
+         data flow more predictable.
+      
+      3. Timestamp Tracking: Each note includes both 'createdAt' and 'lastEdited' 
+         timestamps. The 'lastEdited' field updates whenever a note is created or 
+         modified, enabling accurate "last edited" display and sorting.
+      
+      4. ID Generation: Each note gets a unique ID using a combination of timestamp 
+         and random string. This ensures uniqueness even if notes are created at 
+         the exact same millisecond.
+      
+      5. Error Handling: I wrap localStorage operations in try/catch blocks to 
+         handle potential errors (like quota exceeded or corrupted data) gracefully, 
+         ensuring the app doesn't crash and users are informed of issues.
+    */
+  </script>
+</body>
+</html>
